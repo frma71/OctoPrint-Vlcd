@@ -1,0 +1,5 @@
+#vlcd_container { display:flex; flex-direction:column;}
+.vlcdbutton { width: 4em; font-size: small }
+.buttonrow { display:flex; flex-direction: row}
+#vlcdarea { font-family: monospace; font-size: x-small; overflow:hidden; }
+

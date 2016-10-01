@@ -1,0 +1,50 @@
+/*
+ * View model for OctoPrint-Vlcd
+ *
+ * Author: Fredrik Markstrom
+ * License: AGPLv3
+ */
+$(function() {
+    function VlcdViewModel(parameters) {
+        var self = this;
+	var text = "";
+	console.log("CONSTRUCTED");
+
+	self.vlcd_text = ko.observable();
+	
+	self.onStartupComplete = function() {
+	}
+	self.onDataUpdaterPluginMessage = function(plugin, data) {
+	    console.log("DATA UPDATE");
+            if (plugin != "vlcd") {
+		return;
+            }
+	    console.log("lineno:", lineno);
+	    
+	    if(data.lineno == 0)
+		text = "";
+	    text = text + data.vlcdtext;
+            self.vlcd_text(text);
+	};
+	self.send = function(move, click) {
+	    console.log("Send: " + move  + ":" + click);
+	    $.ajax({
+                type: "GET",
+                url: API_BASEURL + "plugin/vlcd?move=" + move + "&click=" + click
+            });
+	}
+	self.bup100 = function() { self.send(100, 0); }
+	self.bup10  = function() { self.send(10, 0); }	
+	self.bup1   = function() { self.send(1, 0); }
+	self.bclk   = function() { self.send(0, 1); }
+	self.bdn1   = function() { self.send(-1, 0); }
+	self.bdn10  = function() { self.send(-10, 0); }
+	self.bdn100 = function() { self.send(-100, 0); }
+    }
+    // view model class, parameters for constructor, container to bind to
+    OCTOPRINT_VIEWMODELS.push([
+        VlcdViewModel,
+        [],
+        [ "#vlcdarea", "#buttons"]
+    ]);
+});
